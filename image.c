@@ -91,14 +91,14 @@ void convolute(Image *srcImage, Image *destImage, Matrix algorithm)
 
 void *convolute_t(void *args)
 {
-    //printf("entering function...\n");
+    // printf("entering function...\n");
     Image *srcImage = ((arg_struct *)args)->srcImage;
     Image *destImage = ((arg_struct *)args)->destImage;
     int height = ((arg_struct *)args)->srcImage->height;
     int type = ((arg_struct *)args)->type;
     int row = ((arg_struct *)args)->row;
 
-    //printf("row: %d\n", row);
+    // printf("row: %d\n", row);
 
     int rowCnt, pix, bit, span;
     int rowTotal = row + THREADS;
@@ -158,7 +158,7 @@ enum KernelTypes GetKernelType(char *type)
 // argv is expected to take 2 arguments.  First is the source file name (can be jpg, png, bmp, tga).  Second is the lower case name of the algorithm.
 int main(int argc, char **argv)
 {
-    //printf("start\n");
+    // printf("start\n");
     long t1, t2;
     t1 = time(NULL);
 
@@ -190,10 +190,10 @@ int main(int argc, char **argv)
     arg_struct *thread_args;
 
     thread_count = srcImage.height / THREADS;
-    //printf("total_height: %d\n", srcImage.height);
-    //printf("threadCount: %d\n", thread_count);
+    // printf("total_height: %d\n", srcImage.height);
+    // printf("threadCount: %d\n", thread_count);
     thread_handles = (pthread_t *)malloc(thread_count * sizeof(pthread_t));
-    //printf("handles made\n");
+    // printf("handles made\n");
     thread_args = (arg_struct *)malloc(thread_count * sizeof(arg_struct));
 
     for (int row = 0; row < thread_count; row++)
@@ -205,7 +205,7 @@ int main(int argc, char **argv)
 
         arg_struct args = thread_args[row];
 
-        pthread_create(&thread_handles[thread], NULL, &convolute_t, (void *)(&thread_args[row]));
+        pthread_create(&thread_handles[thread], NULL, &convolute_t, (void *)(&args));
     }
 
     for (int nthread = 0; nthread < thread_count; nthread++)

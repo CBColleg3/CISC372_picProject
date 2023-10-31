@@ -1,0 +1,18 @@
+Script started on Mon 30 Oct 2023 11:53:01 PM EDT
+]0;cbcolleg@login00.darwin:~/CISC372_picProject[?1034h[(ea-cisc372-silber:cbcolleg)@login00.darwin CISC372_picProject]$ salloc --ntasks=1 --cpus-per-task=4 --partition=standa rd
+salloc: Granted job allocation 4766294
+salloc: Waiting for resource configuration
+salloc: Nodes r1n09 are ready for job
+]0;cbcolleg@r1n09.darwin:~/CISC372_picProject[?1034h[cbcolleg@r1n09 CISC372_picProject]$ export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+]0;cbcolleg@r1n09.darwin:~/CISC372_picProject[cbcolleg@r1n09 CISC372_picProject]$ srun ./image   pic1.jpg edge
+Took 8 seconds
+]0;cbcolleg@r1n09.darwin:~/CISC372_picProject[cbcolleg@r1n09 CISC372_picProject]$ srun ,.    , ./image  -omp pic12 .jpg edge
+Took 7 seconds
+]0;cbcolleg@r1n09.darwin:~/CISC372_picProject[cbcolleg@r1n09 CISC372_picProject]$ exit
+logout
+salloc: Relinquishing job allocation 4766294
+salloc: Job allocation 4766294 has been revoked.
+]0;cbcolleg@login00.darwin:~/CISC372_picProject[(ea-cisc372-silber:cbcolleg)@login00.darwin CISC372_picProject]$ exit
+exit
+
+Script done on Mon 30 Oct 2023 11:54:20 PM EDT

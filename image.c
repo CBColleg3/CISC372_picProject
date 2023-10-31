@@ -98,24 +98,12 @@ void *convolute_t(void *args)
     int type = ((arg_struct *)args)->type;
     int row = ((arg_struct *)args)->row;
 
-    // printf("row: %d\n", row);
-
     int rowCnt, pix, bit, span;
     int rowTotal = row + THREADS;
-    // printf("rowTotal: %d\n", rowTotal);
-
-    /*
-        if (rowTotal > height)
-    {
-        rowTotal = height;
-    }
-
-    */
 
     span = srcImage->bpp * srcImage->bpp;
     for (rowCnt = row; rowCnt < height; rowCnt += thread_count)
     {
-        // printf("rowCnt: %d\n", rowCnt);
         for (pix = 0; pix < srcImage->width; pix++)
         {
             for (bit = 0; bit < srcImage->bpp; bit++)
@@ -123,7 +111,6 @@ void *convolute_t(void *args)
                 ((arg_struct *)args)->destImage->data[Index(pix, rowCnt, srcImage->width, bit, srcImage->bpp)] = getPixelValue(srcImage, pix, rowCnt, bit, algorithms[type]);
             }
         }
-        // row++;
     }
 }
 
@@ -185,7 +172,8 @@ int main(int argc, char **argv)
     destImage.data = malloc(sizeof(uint8_t) * destImage.width * destImage.bpp * destImage.height);
 
     // Thread Stuff
-    long thread;
+    uint32_t thread;
+    uint32_t ithread;
     pthread_t *thread_handles;
     arg_struct *thread_args;
 
@@ -193,19 +181,19 @@ int main(int argc, char **argv)
     // printf("total_height: %d\n", srcImage.height);
     // printf("threadCount: %d\n", thread_count);
     thread_handles = (pthread_t *)malloc(thread_count * sizeof(pthread_t));
-    // printf("handles made\n");
+
     thread_args = (arg_struct *)malloc(thread_count * sizeof(arg_struct));
 
-    for (int row = 0; row < thread_count; row++)
+    for (ithread = 0; ithread < thread_count; ithread++)
     {
-        thread_args[row].srcImage = &srcImage;
-        thread_args[row].destImage = &destImage;
-        thread_args[row].type = type;
-        thread_args[row].row = row;
+        thread_args[ithread].srcImage = &srcImage;
+        thread_args[ithread].destImage = &destImage;
+        thread_args[ithread].type = type;
+        thread_args[ithread].row = ithread;
 
-        arg_struct args = thread_args[row];
+        // arg_struct args = thread_args[row];
 
-        pthread_create(&thread_handles[thread], NULL, &convolute_t, (void *)(&args));
+        pthread_create(&thread_handles[ithread], NULL, &convolute_t, (void *)(&thread_args[ithread]));
     }
 
     for (int nthread = 0; nthread < thread_count; nthread++)
@@ -219,6 +207,7 @@ int main(int argc, char **argv)
 
     free(destImage.data);
     free(thread_handles);
+    free(thread_args);
     t2 = time(NULL);
     printf("Took %ld seconds\n", t2 - t1);
     return 0;
